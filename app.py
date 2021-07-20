@@ -7,47 +7,37 @@ from kivy.graphics.texture import Texture
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 
-
 class MainScreen(Screen):
     pass
-
 
 class Manager(ScreenManager):
     pass
 
-
 Builder.load_string('''
 <MainScreen>:
-    name: "Test"
-
     FloatLayout:
         Label:
-            text: "Webcam from OpenCV?"
-            pos_hint: {"x":0.0, "y":0.8}
+            text: "DETECTOR DE FACES"
+            pos_hint: {"x":0.0, "y":0.85}
             size_hint: 1.0, 0.2
-
         Image:
-            # this is where the video will show
-            # the id allows easy access
             id: vid
-            size_hint: 1, 0.6
+            size_hint: 1, 0.8
             allow_stretch: True  # allow the video image to be scaled
             keep_ratio: True  # keep the aspect ratio so people don't look squashed
-            pos_hint: {'center_x':0.5, 'top':0.8}
-
+            pos_hint: {'center_x':0.5, 'top':0.9}
 ''')
 
 class Main(App):
     def build(self):
-
-        threading.Thread(target=self.doit, daemon=True).start()
-
+        self.title = 'Interface com Kivy'
+        threading.Thread(target=self.facedetect, daemon=True).start()
         sm = ScreenManager()
         self.main_screen = MainScreen()
         sm.add_widget(self.main_screen)
         return sm
 
-    def doit(self):
+    def facedetect(self):
         self.do_vid = True
         face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
         cam = cv2.VideoCapture(0)
@@ -63,10 +53,6 @@ class Main(App):
             for (x, y, w, h) in faces:                
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
             Clock.schedule_once(partial(self.display_frame, frame))
-            cv2.imshow('Hidden', frame)
-            cv2.waitKey(1)
-        cam.release()
-        cv2.destroyAllWindows()
 
     def display_frame(self, frame, dt):        
         texture = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
