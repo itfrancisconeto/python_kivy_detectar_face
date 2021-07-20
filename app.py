@@ -58,6 +58,7 @@ class Main(App):
             )
             for (x, y, w, h) in faces:                
                 cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                cv2.putText(frame, 'Rosto', (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (36,255,12), 2)
             Clock.schedule_once(partial(self.display_frame, frame))
 
     def display_frame(self, frame, dt):        
