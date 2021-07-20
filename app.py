@@ -26,6 +26,12 @@ Builder.load_string('''
             allow_stretch: True  # allow the video image to be scaled
             keep_ratio: True  # keep the aspect ratio so people don't look squashed
             pos_hint: {'center_x':0.5, 'top':0.9}
+        Button:
+            id:btnExit
+            size_hint: .2, .05
+            pos_hint: {'center_x': .5, 'center_y': .05}
+            text:"Fechar"
+            on_press: App.get_running_app().stop()
 ''')
 
 class Main(App):
